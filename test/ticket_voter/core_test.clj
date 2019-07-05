@@ -3,17 +3,18 @@
             [ticket-voter.core :refer :all]))
 
 (deftest ticket-value-test
-  (testing "adds a single vote"
-    (let [ticket-name "ABC-123"
-          ticket-id (keyword ticket-name)
-          ticket-vote 3]
-      (is (= (ticket-id (hash-map ticket-id (list ticket-vote)))
-             (ticket-id (add-ticket-vote ticket-name ticket-vote))))))
-
-  (testing "allows duplicate values of votes"
+  (testing "overwrites vote value from the same user"
     (let [ticket-name "ABC-234"
           ticket-id (keyword ticket-name)
+          user-name "mja"
           ticket-vote 2]
-      (add-ticket-vote ticket-name ticket-vote)
-      (is (= (ticket-id (hash-map ticket-id (list ticket-vote ticket-vote)))
-             (ticket-id (add-ticket-vote ticket-name ticket-vote)))))))
+      (add-ticket-vote ticket-name user-name 1)
+      (is (= {(keyword user-name) ticket-vote}
+             (ticket-id (add-ticket-vote ticket-name user-name ticket-vote)))))
+
+  (testing "allows multiple votes for the same ticket"
+    (let [ticket-name "ABC-345"
+          ticket-id (keyword ticket-name)]
+      (add-ticket-vote ticket-name "John" 1)
+      (is (= {(keyword "John") 1, (keyword "Alice") 2}
+             (ticket-id (add-ticket-vote ticket-name "Alice" 2))))))))
