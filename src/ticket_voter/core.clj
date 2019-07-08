@@ -10,6 +10,11 @@
     (swap! ticket-collection update-in [ticket-key]
            #(assoc-in % [(keyword user-name)] vote))))
 
+(defn get-ticket-votes
+  [ticket-name]
+  (let [ticket-key (keyword ticket-name)]
+    (ticket-key (deref ticket-collection))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
