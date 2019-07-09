@@ -42,10 +42,13 @@
 (defroutes app-routes
            (GET "/vote" [] request-ticket-votes)
            (GET "/add-vote" [] request-new-ticket-vote)
+           (POST "/add-vote" [] request-new-ticket-vote)
            (route/not-found "Error, page not found!"))
 
 (defn -main
   [& args]
   (let [port (Integer/parseInt (or (System/getenv "PORT") "3000"))]
-    (server/run-server (wrap-defaults #'app-routes site-defaults) {:port port})
+    ; need to read about anti-forgery https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/preventing-cross-site-request-forgery-csrf-attacks
+    (server/run-server (wrap-defaults #'app-routes (assoc-in site-defaults [:security :anti-forgery] false))
+                       {:port port})
     (println (str "Running webserver at http://127.0.0.1:" port "/"))))
