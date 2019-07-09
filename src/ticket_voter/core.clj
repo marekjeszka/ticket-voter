@@ -2,8 +2,7 @@
   (:require [org.httpkit.server :as server]
             [compojure.core :refer :all]
             [compojure.route :as route]
-            [ring.middleware.defaults :refer :all]
-            [clojure.pprint :as pp])
+            [ring.middleware.defaults :refer :all])
   (:gen-class))
 
 (def ticket-collection (atom (hash-map)))
