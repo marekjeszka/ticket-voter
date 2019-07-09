@@ -34,9 +34,17 @@
   )
 
 (deftest routes-requests-test
-  (testing "returns 400 for nil ticket name"
+  (testing "returns 400 for missing param on getting a ticket"
     (is (= {:status 400}
            (request-ticket-votes nil))))
+
+  (testing "returns 400 for missing param on adding a vote"
+    (is (= {:status 400}
+           (request-new-ticket-vote {:params {:ticket-name "A-1" :user-name "me"}})))
+    (is (= {:status 400}
+           (request-new-ticket-vote {:params {:user-name "me" :vote 1}})))
+    (is (= {:status 400}
+           (request-new-ticket-vote {:params {:ticket-name "A-1" :vote 1}}))))
 
   (testing "gets added vote"
     (request-new-ticket-vote {:params {:ticket-name "A-1", :user-name "me", :vote 1}})

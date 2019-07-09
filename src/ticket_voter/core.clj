@@ -33,11 +33,19 @@
 (defn get-parameter [req pname] (get (:params req) pname))
 
 (defn request-new-ticket-vote [req]
-  {:status  200
-   :headers {"Content-Type" "text/html"}
-   :body    (-> (let [p (partial get-parameter req)]
-                  (add-ticket-vote (p :ticket-name) (p :user-name) (p :vote))
-                  "Added!"))})
+  (let [p (partial get-parameter req)
+        ticket-name (p :ticket-name)
+        user-name (p :user-name)
+        vote (p :vote)]
+    (if (some? (and ticket-name user-name vote))
+      {:status  200
+       :headers {"Content-Type" "text/html"}
+       :body    (-> (let [p (partial get-parameter req)]
+                      (add-ticket-vote (p :ticket-name) (p :user-name) (p :vote))
+                      "Added!"))}
+      {:status 400}
+      ))
+  )
 
 (defroutes app-routes
            (GET "/vote" [] request-ticket-votes)
