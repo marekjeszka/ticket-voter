@@ -27,8 +27,18 @@
       (is (= {(keyword user-name) ticket-value}
              (get-ticket-votes ticket-name)))
       (is (= nil
-              (get-ticket-votes "other")))))
+             (get-ticket-votes "other")))))
 
   (testing "returns nil for integer ticket name"
     (is (= nil (get-ticket-votes 1))))
   )
+
+(deftest routes-requests-test
+  (testing "returns 400 for nil ticket name"
+    (is (= {:status 400}
+           (request-ticket-votes nil))))
+
+  (testing "gets added vote"
+    (request-new-ticket-vote {:params {:ticket-name "A-1", :user-name "me", :vote 1}})
+    (is (= {:status 200 :headers {"Content-Type" "text/html"} :body {:me 1}}
+           (request-ticket-votes {:params {:ticket-name "A-1"}})))))
