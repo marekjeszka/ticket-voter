@@ -28,4 +28,7 @@
              (get-ticket-votes ticket-name)))
       (is (= nil
               (get-ticket-votes "other")))))
+
+  (testing "returns nil for integer ticket name"
+    (is (= nil (get-ticket-votes 1))))
   )

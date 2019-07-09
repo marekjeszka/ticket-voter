@@ -13,9 +13,10 @@
 (defn get-ticket-votes
   [ticket-name]
   (let [ticket-key (keyword ticket-name)]
-    (ticket-key (deref ticket-collection))))
+    (if (keyword? ticket-key)
+      (ticket-key (deref ticket-collection))
+      nil)))
 
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!"))
